@@ -1,0 +1,19 @@
+# python generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+
+# Used by mypy
+.mypy_cache/
+
+# This Project
+.vscode
+*.DS_Store
+*.parquet
+
+# Debugging
+*.txt
+*.ipynb
+*.epub
