@@ -107,7 +107,7 @@ def _parse_reference(reference):
     current_book = None
     for ref in references:
         ref = ref.strip()
-        if ref[:3].isalpha():
+        if ref[1:3].isalpha():
             book, verses = ref.split(" ", 1)
             current_book = book.lower()
             if current_book not in BOOKS:
