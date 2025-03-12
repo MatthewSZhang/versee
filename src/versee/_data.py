@@ -53,8 +53,6 @@ def _extract_chapters(tree):
             if verse_span is not None:
                 # Collect all text from the element
                 for text_elem in elem.iter():
-                    if "noteref" == text_elem.attrib.get("class", ""):
-                        continue
                     # verse number spans
                     if "verse" == text_elem.attrib.get("class", ""):
                         current_verse_num = (
@@ -64,7 +62,11 @@ def _extract_chapters(tree):
                             []
                         )  # Initialize empty list for verse content
                     # Skip other verse number spans
-                    elif text_elem.text and current_verse_num:
+                    elif (
+                        "noteref" != text_elem.attrib.get("class", "") and
+                        text_elem.text and
+                        current_verse_num
+                    ):
                         verses[current_verse_num].append(text_elem.text.strip(STRIP))
                     # Collect text from spans and other inline elements
                     if text_elem.tail and current_verse_num:

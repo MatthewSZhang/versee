@@ -54,7 +54,7 @@ We support the following Bible references:
 
 We also support multiple references like:
 
-`gen 2:13-15; 3:16; exo 2; 3:10-; psa 1-3; 76:7-77:-; rev 21:20-22:10, 17-21`
+`gen 2:13-15; 3:16; exo 2; 3:10-; psa 1-3; 76:7-77:-; rev 21:20-22:10, 17-21; jhn 10:10`
 
 1. Semicolon `;` is used for disconnected verses in different chapters and books
 2. Comma `,` is used for disconnected verses in the same chapter
