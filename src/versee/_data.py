@@ -61,11 +61,11 @@ def _extract_chapters(tree):
                         verses[current_verse_num] = (
                             []
                         )  # Initialize empty list for verse content
-                    # Skip other verse number spans
+                    # Skip noteref and cross-reference
                     elif (
-                        "noteref" != text_elem.attrib.get("class", "") and
-                        text_elem.text and
-                        current_verse_num
+                        text_elem.attrib.get("class", "") not in ["noteref", "r"]
+                        and text_elem.text
+                        and current_verse_num
                     ):
                         verses[current_verse_num].append(text_elem.text.strip(STRIP))
                     # Collect text from spans and other inline elements
@@ -79,6 +79,7 @@ def _extract_chapters(tree):
                         "noteref" == text_elem.attrib.get("class", "")
                         or "s" == text_elem.attrib.get("class", "")
                         or "sp" == text_elem.attrib.get("class", "")
+                        or "r" == text_elem.attrib.get("class", "")
                     ):
                         continue
                     # Skip other verse number spans

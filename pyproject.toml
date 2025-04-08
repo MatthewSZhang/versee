@@ -23,8 +23,8 @@ build-backend = "hatchling.build"
 dev = [
     "black>=25.1.0",
     "mypy>=1.14.1",
+    "pytest>=8.3.5",
     "ruff>=0.9.3",
-    "types-requests>=2.32.0.20241016",
 ]
 
 [tool.black]
