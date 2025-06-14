@@ -1,6 +1,6 @@
 # versee
 
-`versee` is a Python package that scrapes Bible content from WeDevote Bible.
+`versee` is a Python package that scrapes Bible content from [eBible.org](https://ebible.org/).
 It mainly has following features:
 
 1. Output the selected Bible content to a (Markdown) file (for printing).
