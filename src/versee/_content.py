@@ -20,7 +20,7 @@ def _format_verses(
                 continue
         if verse.empty:
             raise ValueError(
-                f"Book {content.iloc[0]["book"]}, Chapter {content.iloc[0]["chapter"]},"
+                f"Book {content.iloc[0]['book']}, Chapter {content.iloc[0]['chapter']},"
                 f"Verse {verse_num} not found."
             )
         formatted_content.append(f"{verse_num}. " + verse.iloc[0]["text"])

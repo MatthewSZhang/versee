@@ -24,6 +24,31 @@ def _download_epub(version: str, save_path: str):
         file.write(response.content)
 
 
+# New: iterate text in correct document order and mark verse boundaries
+def _iter_doc_events(elem):
+    skip_classes = {"noteref", "r", "s", "sp"}
+    span_tag = f"{{{NAMESPACES}}}span"
+
+    def is_verse(n):
+        return n.tag == span_tag and n.attrib.get("class", "") == "verse"
+
+    def walk(n):
+        if n.text and n.attrib.get("class", "") not in skip_classes and not is_verse(n):
+            yield ("text", n.text)
+        for child in n:
+            if is_verse(child):
+                num = (child.text or "").strip()
+                if num:
+                    yield ("verse", num)
+            elif child.attrib.get("class", "") not in skip_classes:
+                yield from walk(child)
+            # Always include child.tail in order
+            if child.tail:
+                yield ("text", child.tail)
+
+    yield from walk(elem)
+
+
 def _extract_chapters(tree):
     # Initialize variables
     chapters = {}
@@ -51,43 +76,18 @@ def _extract_chapters(tree):
             # Check if the <div> contains a <span> with class "verse"
             verse_span = elem.find(f".//{{{NAMESPACES}}}span[@class='verse']")
             if verse_span is not None:
-                # Collect all text from the element
-                for text_elem in elem.iter():
-                    # verse number spans
-                    if "verse" == text_elem.attrib.get("class", ""):
-                        current_verse_num = (
-                            text_elem.text.strip()
-                        )  # Found a verse number
-                        verses[current_verse_num] = (
-                            []
-                        )  # Initialize empty list for verse content
-                    # Skip noteref and cross-reference
-                    elif (
-                        text_elem.attrib.get("class", "") not in ["noteref", "r"]
-                        and text_elem.text
-                        and current_verse_num
-                    ):
-                        verses[current_verse_num].append(text_elem.text.strip(STRIP))
-                    # Collect text from spans and other inline elements
-                    if text_elem.tail and current_verse_num:
-                        verses[current_verse_num].append(text_elem.tail.strip(STRIP))
-
+                # Collect text in proper document order
+                for kind, val in _iter_doc_events(elem):
+                    if kind == "verse":
+                        current_verse_num = val  # start a new verse
+                        verses[current_verse_num] = []
+                    elif kind == "text" and current_verse_num:
+                        verses[current_verse_num].append(val.strip(STRIP))
             elif current_verse_num:
-                # If it's a continuation of the same verse, add its text
-                for text_elem in elem.iter():
-                    if (
-                        "noteref" == text_elem.attrib.get("class", "")
-                        or "s" == text_elem.attrib.get("class", "")
-                        or "sp" == text_elem.attrib.get("class", "")
-                        or "r" == text_elem.attrib.get("class", "")
-                    ):
-                        continue
-                    # Skip other verse number spans
-                    if text_elem.text:
-                        verses[current_verse_num].append(text_elem.text.strip(STRIP))
-                    # Collect text from spans and other inline elements
-                    if text_elem.tail:
-                        verses[current_verse_num].append(text_elem.tail.strip(STRIP))
+                # Continuation of the same verse: collect text in order
+                for kind, val in _iter_doc_events(elem):
+                    if kind == "text":
+                        verses[current_verse_num].append(val.strip(STRIP))
     return chapters
 
 

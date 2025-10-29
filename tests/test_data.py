@@ -22,3 +22,25 @@ def test_r():
             end_verse=ref[4],
         )
     assert "（太26·1—5；可14·1—2；路22·1—2）" not in content[-1]
+
+
+def test_tail_order():
+    """Test tail order handling"""
+    reference = "jhn 19:5"
+    version = "cmn-cu89s"
+    bible = _extract_bible(version)
+    parsed = _parse_reference(reference)
+    content = []
+    for ref in parsed:
+        content += _get_content(
+            bible,
+            book=ref[0],
+            start_chapter=ref[1],
+            start_verse=ref[2],
+            end_chapter=ref[3],
+            end_verse=ref[4],
+        )
+    assert (
+        content[1]
+        == "5. 耶稣出来，戴着荆棘冠冕，穿着紫袍。彼拉多对他们说：「你们看这个人！」"
+    )
