@@ -13,6 +13,7 @@ dependencies = [
 ]
 
 [project.scripts]
+web = "versee:run_streamlit"
 file = "versee:write_file"
 debug = "versee:_print_etree"
 
