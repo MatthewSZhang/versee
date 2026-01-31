@@ -27,7 +27,7 @@ uv run file "gen 1" --version eng-kjv2006 --filepath output.md
 2. Web App
 
 ```shell
-uv run streamlit run src/app.py
+uv run web 
 ```
 Use `Ctrl + C` to exit the application.
 
@@ -35,7 +35,7 @@ The default version is `cmn-cu89s`.
 Version can be changed by running
 
 ```shell
-uv run streamlit run src/app.py -- --version eng-kjv2006
+uv run web --version eng-kjv2006
 ```
 
 # Bible reference
